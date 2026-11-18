@@ -1,11 +1,13 @@
 import CidadesHTMLReporter from './CidadesHTMLReporter.js';
 import CidadesTXTReporter from './CidadesTXTReporter.js';
+import CidadesMarkdownReporter from './CidadesMarkdownReporter.js';
 
 import { TITULO_RELATORIO } from './reporterConstants.js';
 
 const REPORTERS = new Map([
   ['html', CidadesHTMLReporter],
   ['txt', CidadesTXTReporter],
+  ['md', CidadesMarkdownReporter]
 ]);
 
 export default class ReporterFactory {
@@ -26,7 +28,7 @@ export default class ReporterFactory {
               Use um dos formatos suportados: ${ReporterFactory.formatosSuportados().join(', ')}.
             `);
         }
-        
+
         return new ReporterClassGenerator(TITULO_RELATORIO);
     }
 
