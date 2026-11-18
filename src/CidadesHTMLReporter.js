@@ -1,37 +1,36 @@
-import * as fs from 'node:fs';
+function escaparHTML(texto) {
+  return texto.replace(/[&<>"']/g, (caractere) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  })[caractere]);
+}
 
 export default class CidadesHTMLReport {
-
-  ler (caminho) {
-    this.cidades = fs.readFileSync(caminho);
+  constructor(titulo){
+    this.titulo = titulo;
   }
 
-  parse () {
-    this.cidades = JSON.parse(this.cidades);
-  }
+  /** @param {{nome: string}[]} cidades */
+  reportar(cidades) {
+    const itens = cidades
+      .map((cidade) => `      <li>${escaparHTML(cidade.nome)}</li>`)
+      .join('\n');
 
-  reportar() {
-    let result = `
-  <!DOCTYPE HTML>
-  <html>
-    <head>
-      <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-      <title>Relatório de Nomes de Cidades</title>
-    </head>
-    <body>
-      <h1>Relatório de Nomes de Cidades</h1>
-      <ul>
-  `;
-
-    for (let i = 0; i < this.cidades.length; i++) {
-      result += '     <li>' + this.cidades[i]['Nome'] + '</li>\n';
-    }
-
-    result += `
-      </ul>
-    </body>
-  </html>`;
-
-    return result;
+    return `<!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8" />
+          <title>${escaparHTML(this.titulo)}</title>
+        </head>
+        <body>
+          <h1>${escaparHTML(this.titulo)}</h1>
+          <ul>
+      ${itens}
+          </ul>
+        </body>
+      </html>`;
   }
 }

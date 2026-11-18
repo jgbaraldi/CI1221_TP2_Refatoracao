@@ -1,24 +1,17 @@
-import * as fs from 'node:fs';
-
 export default class CidadesTXTReporter {
-
-  ler (caminho) {
-    this.cidades = fs.readFileSync(caminho);
+  constructor(titulo){
+    this.titulo = titulo;
   }
 
-  parse () {
-    this.cidades = JSON.parse(this.cidades);
-  }
+  /** @param {{nome: string}[]} cidades */
+  reportar(cidades) {
+    const itens = cidades.map((cidade) => `* ${cidade.nome}`);
 
-  reportar() {
-    let result = `Relatório de Nomes de Cidades
-=============================`;
-
-    for (let i = 0; i < this.cidades.length; i++) {
-      result += '* ' + this.cidades[i]['Nome'] + '\n';
-    }
-
-    return result;
+    return [
+      this.titulo,
+      '='.repeat(this.titulo.length),
+      ...itens
+    ].join('\n');
   }
 }
 
