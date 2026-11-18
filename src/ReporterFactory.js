@@ -1,6 +1,8 @@
 import CidadesHTMLReporter from './CidadesHTMLReporter.js';
 import CidadesTXTReporter from './CidadesTXTReporter.js';
 
+import { TITULO_RELATORIO } from './reporterConstants.js';
+
 const REPORTERS = new Map([
   ['html', CidadesHTMLReporter],
   ['txt', CidadesTXTReporter],
@@ -9,20 +11,26 @@ const REPORTERS = new Map([
 export default class ReporterFactory {
     /**
     * @param {string} formato
-    * @returns {ReporterClass}
+    * @returns {ReporterClassGenerator}
     */
     static criar(formato) {
-      const ReporterClass = REPORTERS.get(formato);
-      if (!ReporterClass) {
-        throw new Error(
-            `Formato de relatório desconhecido: ${formato}. 
-            Formatos suportados: ${ReporterFactory.formatosSuportados().join(', ')}.
+        if (typeof formato !== 'string' || !formato.trim()) {
+            throw new Error('Informe um formato de relatório.');
+        }
+    
+        const ReporterClassGenerator = REPORTERS.get(formato.trim().toLowerCase());
+
+        if (!ReporterClassGenerator) {
+          throw new Error(
+              `Formato de relatório desconhecido: ${formato}. 
+              Use um dos formatos suportados: ${ReporterFactory.formatosSuportados().join(', ')}.
             `);
-      }
-      return new ReporterClass();
+        }
+        
+        return new ReporterClassGenerator(TITULO_RELATORIO);
     }
 
     static formatosSuportados() {
-      return [...REPORTERS.keys()];
+        return [...REPORTERS.keys()];
     }
 }
