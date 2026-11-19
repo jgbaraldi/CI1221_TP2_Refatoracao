@@ -1,0 +1,1 @@
+export const TITULO_RELATORIO = 'Relatório de Nomes de Cidades';
