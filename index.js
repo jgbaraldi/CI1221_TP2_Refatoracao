@@ -1,20 +1,30 @@
-import CidadesHTMLReport from './src/CidadesHTMLReporter.js';
-import CidadesTXTReport from './src/CidadesTXTReporter.js';
 
-const [cmd, filename, format] = process.argv;
+import ReaderFactory from './src/readers/ReaderFactory.js';
+import ReporterFactory from './src/reporters/ReporterFactory.js';
 
+const [,, arquivo, formato] = process.argv;
 
-if (format === 'html') {
-  let reporter = new CidadesHTMLReport();
-  reporter.ler('./data/cidades-2.json');
-  reporter.parse();
-  let html = reporter.reportar();
-  console.log(html);
+if (!arquivo || !formato) {
+  console.error('Uso: node index.js <arquivo> <formato>');
+  console.error(
+    `Fontes suportadas: ${ReaderFactory.extensoesSuportadas().join(', ')}`
+  );
+  console.error(
+    `Formatos suportados: ${ReporterFactory.formatosSuportados().join(', ')}`
+  );
+
+  process.exit(1);
 }
-if (format === 'txt') {
-  let reporter = new CidadesTXTReport();
-  reporter.ler('./data/cidades-2.json');
-  reporter.parse();
-  let html = reporter.reportar();
-  console.log(html);
+
+try {
+  const leitor = ReaderFactory.criar(arquivo);
+  const reporter = ReporterFactory.criar(formato);
+
+  const cidades = leitor.ler(arquivo);
+  const relatorio = reporter.reportar(cidades);
+
+  console.log(relatorio);
+} catch (erro) {
+  console.error(`Erro: ${erro.message}`);
+  process.exit(1);
 }
