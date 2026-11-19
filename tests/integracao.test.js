@@ -31,12 +31,27 @@ function lerEsperadoCSV(caminho) {
   });
 }
 
-function executar(...args) {
-  const resultado = spawnSync(process.execPath, [join(RAIZ, 'index.js'), ...args], {
-    cwd: RAIZ, encoding: 'utf8', maxBuffer: 10 * 1024 * 1024, timeout: 15000,
-  });
+function executar(arquivo, formato) {
+  const args = [];
+
+  if (formato !== undefined) args.push(`--format=${formato}`);
+  if (arquivo !== undefined) args.push(`--source=${arquivo}`);
+
+  const resultado = spawnSync(
+    process.execPath,
+    [join(RAIZ, 'index.js'), ...args],
+    {
+      cwd: RAIZ,
+      encoding: 'utf8',
+      maxBuffer: 10 * 1024 * 1024,
+      timeout: 15000,
+    }
+  );
+
   if (resultado.error) throw resultado.error;
+
   assert.equal(resultado.signal, null, 'Processo encerrado por sinal');
+
   return resultado;
 }
 
