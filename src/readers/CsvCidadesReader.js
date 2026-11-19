@@ -40,10 +40,6 @@ export default class CsvCidadesReader extends CidadesReader {
   }
 
   converter(registro) {
-    return new Cidade({
-      nome: registro.NOME,
-      codigo: registro.COD,
-      uf: registro['COD UF'],
-    });
+    return new Cidade({ nome: registro.NOME });
   }
 }

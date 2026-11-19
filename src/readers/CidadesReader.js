@@ -15,7 +15,13 @@ export default class CidadesReader {
   ler(caminho) {
     const conteudo = this.lerArquivo(caminho);
     const registros = this.parse(conteudo);
-    return registros.map((registro) => this.converter(registro));
+    return registros.map((registro, i) => {
+      try {
+        return this.converter(registro);
+      } catch (erro) {
+        throw new Error(`Registro ${i + 1} de "${caminho}": ${erro.message}`);
+      }
+    });
   }
 
   /** Passo comum a todos os formatos: lê o arquivo como texto UTF-8. */

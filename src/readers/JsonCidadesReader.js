@@ -2,7 +2,7 @@ import CidadesReader from './CidadesReader.js';
 import Cidade from '../model/Cidade.js';
 
 /**
- * Lê cidades de um arquivo JSON 
+ * Lê cidades de um arquivo JSON
  */
 export default class JsonCidadesReader extends CidadesReader {
   parse(conteudo) {
@@ -14,10 +14,6 @@ export default class JsonCidadesReader extends CidadesReader {
   }
 
   converter(registro) {
-    return new Cidade({
-      nome: registro.Nome,
-      codigo: registro.ID,
-      uf: registro.Estado,
-    });
+    return new Cidade({ nome: registro?.Nome });
   }
 }

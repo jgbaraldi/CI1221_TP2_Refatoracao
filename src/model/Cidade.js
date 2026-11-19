@@ -1,10 +1,13 @@
 /**
  * Modelo comum de uma cidade
+ * - nome: obrigatório, não vazio
  */
 export default class Cidade {
-  constructor({ nome, codigo = null, uf = null }) {
-    this.nome = nome;
-    this.codigo = codigo;
-    this.uf = uf;
+  constructor({ nome } = {}) {
+    if (typeof nome !== 'string' || nome.trim() === '') {
+      throw new Error('Cidade inválida: "nome" é obrigatório e deve ser um texto não vazio.');
+    }
+
+    this.nome = nome.trim();
   }
 }
